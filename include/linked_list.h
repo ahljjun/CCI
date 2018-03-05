@@ -4,6 +4,7 @@
 ** The code is no-strings attached free software, it may be redistributed, modified, and used.
 */
 #include <iterator>
+#include <set>
 
 template <class T>
 class List
@@ -226,5 +227,65 @@ public:
 	{
 		Node *node = new Node(y, x.m_rep->m_next);
 		x.m_rep->m_next = node;
+	}
+
+	void unique()
+	{
+		Node *prev = nullptr;
+		Node *cur  = m_head;
+
+		std::set<T> uniqueSet;
+		while(cur)
+		{
+			if ( uniqueSet.find(cur->m_data) == uniqueSet.end() ) 
+			{
+				// not find
+				uniqueSet.insert(cur->m_data);
+				prev = cur;
+				cur  = cur->m_next;
+			}
+			else
+			{
+				// find duplicate
+				if ( cur->m_next )
+					cur = cur->m_next->m_next;
+				else
+					cur = nullptr;
+
+                prev->m_next = cur;
+			}
+		}	
+
+        /*
+		Node* cur = m_head;
+		if (!cur)
+			return;
+
+		std::set<T> uniqueSet;
+		uniqueSet.insert(cur->m_data);
+
+		Node* next = cur->m_next;
+		while(next)
+		{
+			if ( uniqueSet.find(next->m_data) == uniqueSet.end() )
+			{
+				uniqueSet.insert(next->m_data);
+				cur = next;
+				next = next->m_next;
+			}
+			else
+			{
+				cur->m_next = next->m_next;
+				if ( next->m_next )
+				{			
+					next = next->m_next->m_next;
+				}
+				else
+				{
+					next = 0;
+				}
+			}
+		}
+        */
 	}
 };
