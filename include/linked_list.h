@@ -409,4 +409,38 @@ public:
              
             return;
         }
+
+
+        bool isPalindromic()
+        {
+            Node* p1 = m_head;
+            int len = 0;
+            while( p1 ){
+              len++;
+              p1 = p1->m_next; 
+            }
+           
+            p1 = m_head;
+            List tempL;
+            int i = len/2;
+            while( i && p1 ){
+                tempL.push_front(p1->m_data);        
+                i--;
+                p1 = p1->m_next;
+            } 
+          
+            if ( (len - 2 * (len/2)) ) {
+                 p1 = p1->m_next;
+            }
+            
+            Node* p2 = tempL.m_head;
+            for(; p1 != 0 && p2 != 0; p1=p1->m_next, p2 = p2->m_next)
+            {
+                if( p1->m_data != p2->m_data )
+                   return false;
+            }
+            
+            return true;
+	}
 };
+

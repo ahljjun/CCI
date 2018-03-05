@@ -153,4 +153,23 @@ int main()
     List<int> L7; 
     list_sum(L2, L6, L7);
     print(L7);
+
+
+    List<int> L8 ;
+    L8.push_front(7); //9 -> 8 -> 7
+    L8.push_front(8);
+    L8.push_front(9);
+    L8.push_front(8);
+    L8.push_front(7);
+    if (L8.isPalindromic()) 
+        std::cout<<"Palindromic: True"<<std::endl;
+    else
+        std::cout<<"Palindromic: false"<<std::endl;
+
+   L8.push_front(10);
+    if (L8.isPalindromic()) 
+        std::cout<<"Palindromic: True"<<std::endl;
+    else
+        std::cout<<"Palindromic: false"<<std::endl;
+     
 }
