@@ -183,7 +183,6 @@ public:
 
 	void clear()
 	{
-                std::cout<<"~List"<<std::endl;
 		while(!empty())
 			pop_front();
 	}
@@ -206,7 +205,7 @@ public:
 
 	inline bool empty()
 	{
-		return m_head;
+		return m_head == 0;
 	}
 
 	inline T& front() { return *begin(); }

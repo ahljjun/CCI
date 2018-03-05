@@ -6,7 +6,55 @@
 template <class T>
 void print(const List<T>& x)
 {
-	std::copy(x.begin(), x.end(), std::ostream_iterator<T>(std::cout, "\n"));
+	std::copy(x.begin(), x.end(), std::ostream_iterator<T>(std::cout, " "));
+        std::cout<<std::endl;
+}
+
+void list_sum(const List<int>& list1, const List<int>& list2, List<int>& result)
+{
+    //suppose in reverse order, the head of list store the least value
+    int carry = 0; 
+    int sum  = 0;
+    int ret = 0;
+    List<int>::const_iterator it1 = list1.begin();
+    List<int>::const_iterator it2 = list2.begin();
+
+    while( it1 != list1.end() && it2 != list2.end() ) 
+    {
+        sum =  carry + *it1 + *it2;
+        ret = sum % 10;
+        carry = sum / 10;
+        result.push_front(ret);
+        
+        it1++;
+        it2++;
+    }
+   
+    if ( it1 == list1.end() && it2 == list2.end() && carry )
+	    result.push_front(carry);
+    else if ( it1 == list1.end() )
+    {
+        //continue add list2
+        while( it2 != list2.end() ) 
+        {
+           result.push_front(*it2 + carry);
+           carry = 0; 
+           it2++;
+        }
+    }
+    else if ( it2 == list2.end() )
+    {
+        //continue add list2
+        while( it1 != list1.end() ) 
+        {
+           result.push_front(*it1 + carry);
+           carry = 0; 
+           it1++;
+        }
+    }
+
+    result.reverse();
+    return;
 }
 
 int main()
@@ -84,4 +132,25 @@ int main()
     y.sort_by_value(50);
     print(y);
     std::cout<<"sorted_by value 50 finish"<<std::endl;
+
+    std::cout<<"============= test for sum function =============="<<std::endl;
+    List<int> L2 ;
+    L2.push_front(7); //9 -> 8 -> 7
+    L2.push_front(8);
+    L2.push_front(9);
+  
+    List<int> L4 ;
+    L4.push_front(8); //9 -> 9 -> 8
+    L4.push_front(9);
+    L4.push_front(9);
+
+
+    List<int> L5; // should be 8 -> 8 -> 6 -> 1
+    list_sum(L2, L4, L5);
+    print(L5);
+
+    List<int> L6; 
+    List<int> L7; 
+    list_sum(L2, L6, L7);
+    print(L7);
 }
