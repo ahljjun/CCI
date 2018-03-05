@@ -5,6 +5,7 @@
 */
 #include <iterator>
 #include <set>
+#include <iostream>
 
 template <class T>
 class List
@@ -182,6 +183,7 @@ public:
 
 	void clear()
 	{
+                std::cout<<"~List"<<std::endl;
 		while(!empty())
 			pop_front();
 	}
@@ -288,4 +290,124 @@ public:
 		}
         */
 	}
+
+	inline iterator r_nth(int n) 
+	{ 
+           Node *p=m_head;
+           while( n > 0 ){
+               p = p->m_next;
+               n--;
+           }
+           if ( !p )
+              return end();
+
+
+           Node *p1 = m_head;
+           while( p ){
+               p = p->m_next;
+               p1 = p1->m_next;
+           }
+          
+           return iterator(p1);
+	}
+        
+        inline void remove(iterator it)
+        {
+           if ( it.m_rep == m_head ) // remove head itself
+ 	   {
+              m_head = m_head->m_next;
+              return;
+	   }
+              
+           Node *p=m_head;
+           while( p && p->m_next != it.m_rep ){
+               p = p->m_next;
+           }
+           
+           if ( !p || !p->m_next )
+               return ;
+           
+           p->m_next = p->m_next->m_next;
+           return;
+        }
+   
+        void sort_by_value(T value)
+        {
+            Node* lessThanValueNode = 0;
+            Node* largerThanValueNode = 0;
+            
+            Node* node = m_head;
+            Node* prev = 0;
+            Node* tmp = 0;
+            while( node ) {
+                if ( node->m_data == value )
+                {
+                    // just leave it in the origin list
+                    prev = node;
+                    node = node->m_next;
+                    continue;
+                }
+                
+                tmp = node;
+                //remove the elemnt first
+                if ( node == m_head ) {
+                   m_head = node->m_next;
+                   node = node->m_next;
+                }
+                else {
+                   if ( prev != nullptr )
+		      prev->m_next = node->m_next; 
+                   node = node->m_next;
+                }
+
+                if ( tmp->m_data < value )
+                {
+                      tmp->m_next = lessThanValueNode ;
+	              lessThanValueNode  = tmp;
+                }
+                else
+                   // insert to larger list
+                {
+                      tmp->m_next = largerThanValueNode;
+	              largerThanValueNode  = tmp;
+                }
+            }
+             
+            Node* equalList = m_head; 
+            // merge three list
+            if ( lessThanValueNode ){
+               m_head = lessThanValueNode;
+               node = lessThanValueNode;
+               while(node && node->m_next){
+                   node = node->m_next;
+               }  
+            }
+
+            if (equalList) {
+               if ( node ) {
+                  node->m_next = equalList;
+                  node = equalList;
+               } 
+               else {
+                  node = equalList;
+               }
+               while(node && node->m_next){
+                   node = node->m_next;
+               }  
+            }
+            
+            if ( largerThanValueNode )
+            {
+               if ( node ) {
+                  node->m_next = largerThanValueNode;
+                  node = largerThanValueNode;
+               } 
+               else {
+                  //just set the head 
+                  m_head = largerThanValueNode;
+               }
+            }
+             
+            return;
+        }
 };

@@ -64,4 +64,24 @@ int main()
     std::cout<<"unique all the same data"<<std::endl;
     sameList.unique();
     print(sameList);
+
+
+    std::cout<<"find kth element"<<std::endl;
+    it = y.r_nth(5);
+    std::cout<< ": "<< *it << std::endl;
+    std::cout<<"remove element"<<std::endl;
+    y.remove(it);
+    print(y);
+
+    std::cout<<"sorted_by value 5"<<std::endl;
+    y.sort_by_value(5);
+    print(y);
+    std::cout<<"sorted_by value 6"<<std::endl;
+    y.sort_by_value(6);
+    print(y);
+
+    std::cout<<"sorted_by value 50"<<std::endl;
+    y.sort_by_value(50);
+    print(y);
+    std::cout<<"sorted_by value 50 finish"<<std::endl;
 }
