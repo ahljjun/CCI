@@ -1,3 +1,5 @@
+#ifndef __LIST_H
+#define __LIST_H
 /*
 ** copied from https://www.panix.com/~elflord/cpp/list_howto/
 ** Copyright Donovan Rebbechi 2001. This tutorial may be distributed freely if this copyright notice is preserved. Changes require authors permission. 
@@ -443,4 +445,4 @@ public:
             return true;
 	}
 };
-
+#endif
