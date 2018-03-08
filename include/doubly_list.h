@@ -174,6 +174,84 @@ public:
 		}
 	}
 
+    // remove \consecutive duplicate\ elements 	
+	void unique() 
+	{
+		iterator first = begin();
+		iterator last  = end();
+
+        //empty list, do nothing
+		if (first == last)
+			return;
+
+		iterator next = first;
+		while(++next != last)
+		{
+			if (*next == *first)
+				erase(next);
+			else
+				first = next;
+
+            // 1. original next has been erased, set next = first to iterator new next when ++next
+            // 2. orignal next has been kept and first updated, so update the next to first as well.
+			next = first; 
+		}
+	}
+
+
+	void splice(iterator pos, DList<T>& x)
+	{
+		//assert( this != &x )
+		if (!x.empty())
+			transfer(pos, x.begin(), x.end());
+	}
+
+	void splice(iterator pos, DList<T>& x, iterator i)
+	{
+		iterator j = i;
+		j++;
+		
+		// pos already just before i . or pos == i
+		if (pos == i || pos == j) return;
+
+		transfer(pos, i, j);
+	}
+
+	void splice(iterator pos, DList<T>& x, iterator first, iterator last)
+	{
+		if (first != last)
+			transfer(pos, first, last);
+	}
+
+protected:
+// refer to stl implementaion for moving [first, last) elements before pos.
+// pos, [fir, last) might be two different list
+//   
+//      [pos->m_prev]   < - >         pos         < - > [pos->m_next]
+//      [first->m_prev] < - >    [first, last-1]  < - > last
+//       
+//       [pos->m_prev] ->(3) [first, last->m_prev] ->(1) pos
+//                                                 <-(4)
+//       [first->m_prev] ->(2) last
+//                       <-(5) 
+// 
+	void transfer(iterator pos, iterator first, iterator last)
+	{
+		// need to update pos.p->m_next/ pos.p->m_prev /...
+		if (pos != last) {
+			last.p->m_prev->m_next = pos.p;
+			first.p->m_prev->m_next = last;
+			pos.p->m_prev->m_next = first;
+
+			list_node* tmp = pos.p->m_prev;
+			pos.p->m_prev = last.p->m_prev;
+			last.p->m_prev = first.p->m_prev;
+			first.p->m_prev = tmp;
+		}
+
+	}
+
+
 private:
 	list_node* dummyNodePtr;
 };
