@@ -72,6 +72,9 @@ public:
 
 	typedef list_iterator<false> iterator;
 	typedef list_iterator<true> const_iterator;
+	typedef typename list_iterator<false>::reference reference;
+	typedef typename list_iterator<true>::reference const_reference;
+	typedef T value_type;
 
 	DList()
 	{
@@ -107,6 +110,13 @@ public:
 
 	iterator end() {
 		return iterator(dummyNodePtr);
+	}
+
+	reference front() {
+		return *begin();
+	}
+	reference back() {
+		return *(--end());
 	}
 
 	bool empty() const 
@@ -222,6 +232,13 @@ public:
 		if (first != last)
 			transfer(pos, first, last);
 	}
+
+
+	void sort()
+	{
+		//TODO
+	}
+
 
 protected:
 // refer to stl implementaion for moving [first, last) elements before pos.
