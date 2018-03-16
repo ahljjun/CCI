@@ -42,6 +42,29 @@ bool isOperator(const string& s)
 	return s == "+" || s == "-" || s == "*" || s == "/" ;
 }
 
+bool isParentheses(const string& s)
+{
+	return s == "(" || s == ")" ;
+}
+
+bool comparePriority(const string& s1, const string& s2)
+{
+	std::cout<<"comparePriority: s1: "<<s1<<", s2: "<<s2<<std::endl;
+	if ( s1 == "*" || s1 == "/" )
+	{
+		if ( s2 == "+" || s2 == "-" )
+		{
+			return true;
+		} 
+	}
+	else
+	{
+		return false; 
+	}
+
+	return true;
+}
+
 TreeNode<string>*
 convertToPrefixTree(const string &expression) 
 {
@@ -116,6 +139,79 @@ convertToPostTree(const string &expression)
 }
 
 
+void convertToReversePolishNotation(const string& expression)
+{
+	//suppose the expression is prefix expression and split by " "
+	std::vector<string> strVec = split(expression, " ");
+	std::copy(strVec.begin(), strVec.end(), std::ostream_iterator<string>(std::cout, " "));
+	std::cout<<" strVec "<<std::endl;
+
+	stack<string> OpStack;
+	stack<string> tmpStack;
+
+	for(int i=0; i < strVec.size(); i++)
+	{
+		if ( isOperator(strVec[i]) )
+		{
+			while(!OpStack.empty() 
+				    && (OpStack.top() != "(")
+				    && !comparePriority(strVec[i], OpStack.top()))
+			{
+				tmpStack.push(OpStack.top());
+				OpStack.pop();
+			}
+
+			OpStack.push(strVec[i]);
+		}
+		else if ( isParentheses(strVec[i]) )
+		{
+			if ( strVec[i]== "(" )
+			{
+				OpStack.push(strVec[i]);
+			}
+			else // is ")"
+			{
+				while( !OpStack.empty() && OpStack.top() != "(" )
+				{
+					tmpStack.push(OpStack.top());
+					OpStack.pop();
+				}
+				if ( OpStack.empty() || OpStack.top() != "(" )
+				{
+					std::cerr<< "Parentheses is not matched" << std::endl;
+					return ;
+				}
+
+				OpStack.pop(); // clear this "()"
+			}
+		}
+		else // the data now
+		{
+			tmpStack.push(strVec[i]);
+		}
+	}
+
+
+    //assert(!OpStack.empty());
+    //1 2 3 + 4 × + 5 -
+
+	while(!tmpStack.empty())
+	{
+		OpStack.push(tmpStack.top());
+
+		tmpStack.pop();
+	}
+
+	while(!OpStack.empty())
+	{
+		std::cout<<OpStack.top()<<" " ;
+		OpStack.pop();
+	}
+
+	std::cout<<"\n";
+}
+
+
 template <class T>
 void printTree(TreeNode<T>* root)
 {
@@ -135,7 +231,13 @@ int main()
 	TreeNode<string>* tree = convertToPrefixTree(preExpression);
 
     printTree(tree);
-	
+
+    std::cout<<"convertToReversePolishNotation begins===="<<std::endl;
+
+    const string midExpression = "1 + ( ( 2 + 3 ) * 4 ) - 5";
+    convertToReversePolishNotation(midExpression);
+
+    std::cout<<"convertToReversePolishNotation ends===="<<std::endl;
     return 0;
 }
 
